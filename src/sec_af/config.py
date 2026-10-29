@@ -115,8 +115,9 @@ class AIIntegrationConfig(BaseModel):
             "ANTHROPIC_API_KEY",
             "OPENAI_API_KEY",
             "GOOGLE_API_KEY",
-            "GITHUB_TOKEN",
-            "GH_TOKEN",
+            "DEEPSEEK_API_KEY",
+            # Avalworks: sin GITHUB_TOKEN/GH_TOKEN: el harness lee codigo no confiable
+            # y no debe heredar credenciales de GitHub (el checkout lo hace el wrapper).
         )
         env: dict[str, str] = {key: value for key in env_keys if (value := os.getenv(key))}
         env["AGENTFIELD_AFORGE_COMMAND"] = os.getenv("AGENTFIELD_AFORGE_COMMAND", "exec")
