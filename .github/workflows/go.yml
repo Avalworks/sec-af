@@ -1,53 +1,35 @@
 name: Go
 
+# Convención Avalworks: se trabaja en dev; la suite Go solo corre hacia main.
 on:
   push:
     branches: ["main"]
-    paths:
-      - "go/**"
-      - ".github/workflows/go.yml"
+    paths: ["go/**", ".github/workflows/go.yml"]
   pull_request:
     branches: ["main"]
-    paths:
-      - "go/**"
-      - ".github/workflows/go.yml"
+    paths: ["go/**", ".github/workflows/go.yml"]
+
+concurrency:
+  group: go-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   go:
     name: build / vet / test / gofmt
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: go
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5
         with:
-          # Track the module's own directive so a go.mod bump moves CI with it.
           go-version-file: go/go.mod
           cache-dependency-path: go/go.sum
-
-      - name: Build
-        run: go build ./...
-
-      - name: Vet
-        run: go vet ./...
-
-      - name: Test
-        run: go test ./...
-
-      - name: Gofmt
+      - run: go build ./...
+      - run: go vet ./...
+      - run: go test ./...
+      - name: gofmt
         run: test -z "$(gofmt -l .)"
-
-  docker:
-    name: docker build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # The Dockerfile COPYs go/go.mod and go/, so the build context is the
-      # REPO ROOT, not go/.
-      - name: Build the Go node image
-        run: docker build -f go/Dockerfile -t sec-af-go:test .

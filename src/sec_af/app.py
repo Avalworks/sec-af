@@ -50,8 +50,9 @@ app = Agent(
     ),
     ai_config=AIConfig(
         model=_ai_config.ai_model,
-        api_key=os.getenv("OPENROUTER_API_KEY", ""),
-        api_base="https://openrouter.ai/api/v1",
+        # Avalworks: endpoint OpenAI-compatible configurable (p. ej. DeepSeek directo).
+        api_key=os.getenv("SEC_AF_AI_API_KEY") or os.getenv("OPENROUTER_API_KEY", ""),
+        api_base=os.getenv("SEC_AF_AI_API_BASE", "https://openrouter.ai/api/v1"),
     ),
 )
 
