@@ -26,4 +26,4 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -e ".[dev]" || pip install -e . pytest pytest-asyncio
-      - run: pytest -q --deselect tests/test_scoring.py
+      - run: pytest -q --deselect tests/test_scoring.py::test_compute_exploitability_score_defaults_reachability_when_missing  # drift de upstream

@@ -121,7 +121,7 @@ def test_provider_env_only_includes_present_keys(monkeypatch: pytest.MonkeyPatch
     env = AIIntegrationConfig.from_env().provider_env()
 
     assert env["OPENAI_API_KEY"] == "test-openai"
-    assert env["GITHUB_TOKEN"] == "test-gh"
+    assert "GITHUB_TOKEN" not in env  # Avalworks: el harness no hereda tokens de GitHub
     assert "OPENROUTER_API_KEY" not in env
     assert "XDG_DATA_HOME" in env
 
