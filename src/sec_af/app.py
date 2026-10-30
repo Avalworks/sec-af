@@ -28,6 +28,9 @@ from .schemas.input import AuditInput  # noqa: TC001
 from .schemas.prove import VerifiedFinding
 from .schemas.recon import ReconResult
 
+from sec_af.llm_compat import install as _install_llm_compat
+
+_install_llm_compat()
 _ai_config = AIIntegrationConfig.from_env()
 NODE_ID = os.getenv("NODE_ID", "sec-af")
 HarnessConfig = getattr(_agentfield, "HarnessConfig")
